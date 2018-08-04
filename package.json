@@ -1,13 +1,13 @@
 {
   "name": "bbrest",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Ambarish Roy",
   "license": "ISC",
@@ -18,5 +18,16 @@
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.6"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamby/burger-builder-rest.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/aamby/burger-builder-rest/issues"
+  },
+  "homepage": "https://github.com/aamby/burger-builder-rest#readme",
+  "description": ""
 }
