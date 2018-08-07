@@ -1,12 +1,9 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const port = (process.env.PORT || 4545);
 
-// Get env vars
-var program_name = process.argv[0];
-var script_path = process.argv[1];
-var port = process.argv[2];
-
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,5 +20,5 @@ app.use('/api/login', require('./routes/sessions'));
 app.use('/api/ingredientcontrols', require('./routes/ingredientControls'));
 
 app.listen(port, () =>{
-    console.log('app is listening on port '+ port);
+    console.log(`app is listening on port ${port}`);
 });

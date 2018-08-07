@@ -1,12 +1,17 @@
-var router = require('express').Router();
-var IngredientControl = require('../models/IngredientControl');
+const router = require('express').Router();
+const Joi = require('joi');
+const IngredientControl = require('../models/datamodels/IngredientControl');
+const IngredientControlModel = require('../models/businessmodels/ingredientControl');
 
 router.post('/getall', (req, res) => {
     IngredientControl.find({createdby:req.user}).then(
-        (newIngredient) => {
+        (ingredientsData) => {
+            //Creating business object collection
+            const ingredientsResult = IngredientControlModel.CreateList(ingredientsData);
+
             res.json({
-                records: newIngredient,
-                message: 'success',
+                records: ingredientsResult,
+                message: 'Success',
                 isSuccess: true,
             });
         },
@@ -17,18 +22,25 @@ router.post('/getall', (req, res) => {
 });
 
 router.post('/addnew', (req, res) => {
-    var ingredientControl = new IngredientControl({
-        label: req.body.ingredientControl.label,
-        type: req.body.ingredientControl.type,
-        rate: req.body.ingredientControl.rate,
+    //Creating business model
+    const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
+    if(ingredientControlModel.ValidationErrors) return res.status(400).send(ingredientControlModel.ValidationErrors.details[0].message);
+    
+    //Setting dataobject from business object
+    const ingredientControl = new IngredientControl({
+        label: ingredientControlModel.Label,
+        type: ingredientControlModel.Type,
+        rate: ingredientControlModel.Rate,
         createdby: req.user
     });
 
     ingredientControl.save().then(
-        (newIngredient) => {
+        (ingredientData) => {
+            //Creating business object
+            const ingredientResult = new IngredientControlModel(ingredientData, false);
             res.json({
-                records: newIngredient,
-                message: 'success',
+                records: ingredientResult,
+                message: 'Success',
                 isSuccess: true,
             });
         },
@@ -39,17 +51,24 @@ router.post('/addnew', (req, res) => {
 });
 
 router.post('/edit', (req, res) => {
-    IngredientControl.findOne({_id:req.body.ingredientControl._id}).then(
+    //Creating business model
+    const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
+    if(ingredientControlModel.ValidationErrors) return res.status(400).send(ingredientControlModel.ValidationErrors.details[0].message);
+       
+    //Setting dataobject from business object after finding existing item
+    IngredientControl.findOne({_id:req.body.ingredientControl.id}).then(
         (ingredient) =>{ 
-            ingredient.label = req.body.ingredientControl.label;
-            ingredient.type = req.body.ingredientControl.type;
-            ingredient.rate = req.body.ingredientControl.rate;
+            ingredient.label = ingredientControlModel.Label;
+            ingredient.type = ingredientControlModel.Type;
+            ingredient.rate = ingredientControlModel.Rate;
 
             ingredient.save().then(
-                (newIngredient) => {
+                (ingredientData) => {
+                    //Creating business object
+                    const ingredientResult = new IngredientControlModel(ingredientData, false);
                     res.json({
-                        records: newIngredient,
-                        message: 'success',
+                        records: ingredientResult,
+                        message: 'Success',
                         isSuccess: true,
                     });
                 },
@@ -59,19 +78,19 @@ router.post('/edit', (req, res) => {
             );
         },
         (err) =>{
-            res.send(500, err.message);
+            res.send(500, 'Invalid record to edit.');
         }
     );
 });
 
 router.post('/delete', (req, res) => {
-    IngredientControl.findOne({_id:req.body.ingredientControl._id}).then(
-        (ingredient) =>{ 
-            ingredient.remove().then(
+    IngredientControl.findOne({_id:req.body.ingredientControl.id}).then(
+        (ingredientData) =>{ 
+            ingredientData.remove().then(
                 () => {
                     res.json({
-                        records: ingredient,
-                        message: 'success',
+                        records: {},
+                        message: 'Success',
                         isSuccess: true,
                     });
                 },
@@ -79,62 +98,11 @@ router.post('/delete', (req, res) => {
                     res.send(500, err.message);
                 }
             );
+        },
+        (err) =>{
+            res.send(500, 'Invalid record to delete.');
         }
     );
 });
-
-// router.get('/', (req, res) => {
-//     console.log(req.user);
-//     IngredientControl.find({createdby:req.user}).then(
-//         (ingredients) =>{ 
-//             res.json(ingredients);
-//         });
-// });
-
-//http://localhost:4242/api/ingredientcontrols/5b64900cb2f15002f63917a2
-// router.put('/:id', (req, res) => {
-//     IngredientControl.findOne({_id:req.params.id, createdby: req.user}).then(
-//         (ingredient) =>{ 
-//             ingredient.label = req.body.ingredientControl.label;
-//             ingredient.type = req.body.ingredientControl.type;
-//             ingredient.rate = req.body.ingredientControl.rate;
-
-//             ingredient.save().then(
-//                 (newIngredient) => {
-//                     res.json({
-//                         records: newIngredient,
-//                         message: 'success',
-//                         isSuccess: true,
-//                     });
-//                 },
-//                 (err) =>{
-//                     res.send(500, err.message);
-//                 }
-//             );
-//         },
-//         (err) =>{
-//             res.send(500, err.message);
-//         }
-//     );
-// });
-
-// router.delete('/:id', (req, res) => {
-//     IngredientControl.findOne({_id:req.params.id, createdby: req.user}).then(
-//         (ingredient) =>{ 
-//             ingredient.remove().then(
-//                 () => {
-//                     res.json({
-//                         records: ingredient,
-//                         message: 'success',
-//                         isSuccess: true,
-//                     });
-//                 },
-//                 (err) =>{
-//                     res.send(500, err.message);
-//                 }
-//             );
-//         }
-//     );
-// });
 
 module.exports = router;

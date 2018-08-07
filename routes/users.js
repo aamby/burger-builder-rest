@@ -1,19 +1,28 @@
-var router = require('express').Router();
-var bcrypt = require('bcryptjs');
-var User = require('../models/User');
+const router = require('express').Router();
+const Joi = require('joi');
+const bcrypt = require('bcryptjs');
+const User = require('../models/datamodels/User');
+const UserModel = require('../models/businessmodels/user');
 
 router.post('/addnew', (req, res) => {
-    var user = new User({
-        username: req.body.user.username,
-        email: req.body.user.email,
-        passhash: bcrypt.hashSync(req.body.user.pwd, 10)
+    //Creating business model
+    const userModel = new UserModel(req.body.user);
+    if(userModel.ValidationErrors) return res.status(400).send(userModel.ValidationErrors.details[0].message);
+    
+    //Setting dataobject from business object
+    const user = new User({
+        username: userModel.UserName,
+        email: userModel.Email,
+        passhash: bcrypt.hashSync(userModel.Pwd, 10)
     });
 
     user.save().then(
-        (newUser) => {
+        (userData) => {
+            //Convert data object to business object before return to ui
+            const userResult = new UserModel(userData, false);
             res.json({
-                records: newUser,
-                message: 'success',
+                records: userResult,
+                message: 'Success',
                 isSuccess: true
             });
         },

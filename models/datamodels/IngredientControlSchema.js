@@ -1,6 +1,6 @@
-var db = require('../config/db');
+const db = require('../../config/db');
 
-var IngredientControlSchema = db.Schema({
+const IngredientControlSchema = db.Schema({
     label: {type: String, require: true},
     type: {type: String, require: true},
     rate:{type: Number, require: true},
