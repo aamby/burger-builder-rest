@@ -1,0 +1,7 @@
+{
+    "mongodbURL" : {
+        "dbType" : "mongodb",
+        "dbServer" : "localhost:27017",
+        "dbName" : "burger_builder"
+    }
+}

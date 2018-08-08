@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../settings/db');
 
 const UserSchema = db.Schema({
     username: {type: String, require: true},

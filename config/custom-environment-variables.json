@@ -1,0 +1,8 @@
+{
+    "envConfig" : {
+        "envPort" : "PORT",
+        "envMode" : "NODE_ENV",
+        "dbUserName" : "bb_dbUserName", 
+        "dbPwd" : "bb_dbPwd"
+    }
+}

@@ -1,6 +1,6 @@
 var jwt = require('jsonwebtoken');
 var User = require('../models/datamodels/User');
-var constants  = require('../config/constants');
+var constants  = require('../settings/constants');
 
 module.exports = (req, res, next) => {
     const sessionToken = req.headers.authorization; 

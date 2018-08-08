@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../settings/db');
 
 const IngredientControlSchema = db.Schema({
     label: {type: String, require: true},

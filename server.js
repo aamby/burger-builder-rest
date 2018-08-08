@@ -1,17 +1,33 @@
+const morgan = require('morgan');
+const helmet = require('helmet');
 const express = require('express');
+const constants  = require('./settings/constants');
+const config = require('config');
 const app = express();
 const bodyParser = require('body-parser');
-const port = (process.env.PORT || 4545);
+const port = (config.get('envConfig.envPort') || constants.PORT);
 
-app.use(express.json());
+//Middleware functions
+//============================
+
+//Inbuilt middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-//Handling CORS
+//Custom middleware
 app.use(require('./middleware/header'));
 app.use(require('./middleware/validateSession'));
 
+//Third party middleware
+app.use(helmet());
 
+const runMode = config.get('envConfig.envMode') || constants.PROD_ENV;
+if(runMode !== constants.PROD_ENV){
+    app.use(morgan('tiny'));
+}
+
+//Routing
 app.use('/test', (req,res) => {
     res.send('hello world');
     res.end();
@@ -19,6 +35,10 @@ app.use('/test', (req,res) => {
 app.use('/api/users', require('./routes/users'));
 app.use('/api/login', require('./routes/sessions'));
 app.use('/api/ingredientcontrols', require('./routes/ingredientControls'));
+
+//============================
+
+
 
 app.listen(port, () =>{
     console.log(`app is listening on port ${port}`);
