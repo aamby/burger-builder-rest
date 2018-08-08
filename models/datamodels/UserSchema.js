@@ -5,6 +5,6 @@ const UserSchema = db.Schema({
     email: {type: String, require: true},
     passhash:{type: String, require: true},
     createdate:{type: Date, default: Date.now}
-});
+}, {collection : 'users'});
 
 module.exports = UserSchema;

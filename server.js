@@ -14,6 +14,7 @@ app.use(require('./middleware/validateSession'));
 
 app.use('/test', (req,res) => {
     res.send('hello world');
+    res.end();
 });
 app.use('/api/users', require('./routes/users'));
 app.use('/api/login', require('./routes/sessions'));

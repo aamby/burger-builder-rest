@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const User = require('../models/datamodels/User');
-const UserModel = require('../models/businessmodels/user');
+const UserModel = require('../models/businessmodels/UserModel');
 
 router.post('/addnew', (req, res) => {
     //Creating business model

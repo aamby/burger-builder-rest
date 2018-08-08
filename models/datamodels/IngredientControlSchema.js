@@ -6,6 +6,6 @@ const IngredientControlSchema = db.Schema({
     rate:{type: Number, require: true},
     createdon:{type: Date, default: Date.now},
     createdby:{type: db.Schema.Types.ObjectId, ref: 'User'}
-});
+}, {collection : 'ingredientcontrols'});
 
 module.exports = IngredientControlSchema;

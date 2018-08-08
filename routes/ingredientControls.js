@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Joi = require('joi');
 const IngredientControl = require('../models/datamodels/IngredientControl');
-const IngredientControlModel = require('../models/businessmodels/ingredientControl');
+const IngredientControlModel = require('../models/businessmodels/IngredientControlModel');
 
 router.post('/getall', (req, res) => {
     IngredientControl.find({createdby:req.user}).then(
