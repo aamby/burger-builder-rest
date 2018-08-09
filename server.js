@@ -13,7 +13,7 @@ const mwHeader  = require('./middleware/header');
 const mwValidateSeeion  = require('./middleware/validateSession');
 
 const app = express();
-const port = (config.get('envConfig.envPort') || constants.PORT);
+const port = config.get('envConfig.envPort') || constants.PORT;
 
 //Setting view templates for html responses
 //This is not required for our rest api
@@ -24,9 +24,9 @@ app.set('views', './views');
 //============================
 
 //Inbuilt middleware
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 //Custom middleware
 app.use(mwHeader);

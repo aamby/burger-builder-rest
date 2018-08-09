@@ -22,9 +22,12 @@ router.post('/getall', (req, res) => {
 });
 
 router.post('/addnew', (req, res) => {
+    //Validate input
+    const {error} = UserModel.ValidateInput(req.body.user);
+    if(error) return res.status(400).send(error.details[0].message);
+
     //Creating business model
     const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
-    if(ingredientControlModel.ValidationErrors) return res.status(400).send(ingredientControlModel.ValidationErrors.details[0].message);
     
     //Setting dataobject from business object
     const ingredientControl = new IngredientControl({
@@ -37,7 +40,7 @@ router.post('/addnew', (req, res) => {
     ingredientControl.save().then(
         (ingredientData) => {
             //Creating business object
-            const ingredientResult = new IngredientControlModel(ingredientData, false);
+            const ingredientResult = new IngredientControlModel(ingredientData);
             res.json({
                 records: ingredientResult,
                 message: 'Success',
@@ -51,10 +54,13 @@ router.post('/addnew', (req, res) => {
 });
 
 router.post('/edit', (req, res) => {
+    //Validate input
+    const {error} = UserModel.ValidateInput(req.body.user);
+    if(error) return res.status(400).send(error.details[0].message);
+
     //Creating business model
     const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
-    if(ingredientControlModel.ValidationErrors) return res.status(400).send(ingredientControlModel.ValidationErrors.details[0].message);
-       
+  
     //Setting dataobject from business object after finding existing item
     IngredientControl.findOne({_id:req.body.ingredientControl.id}).then(
         (ingredient) =>{ 
@@ -65,7 +71,7 @@ router.post('/edit', (req, res) => {
             ingredient.save().then(
                 (ingredientData) => {
                     //Creating business object
-                    const ingredientResult = new IngredientControlModel(ingredientData, false);
+                    const ingredientResult = new IngredientControlModel(ingredientData);
                     res.json({
                         records: ingredientResult,
                         message: 'Success',

@@ -1,26 +1,25 @@
 const Joi = require('joi');
 
-const userValidationSchema = {
-    username : Joi.string().min(3).max(50).required(),
-    pwd: Joi.string().min(3).max(10).required(),
-    email: Joi.string().min(3).max(255).email().required(),
-    id: Joi.string().allow(null).optional(),
-    createdate: Joi.string().allow(null).optional()
-};
-
 class UserModel{
-    constructor(userData, doValidate = true){
+    constructor(userData){
         this.username = userData.username;   
         this.email = userData.email;
         if(userData.pwd) this.pwd = userData.pwd;
         if(userData.createdate) this.createdate = userData.createdate;
         if(userData._id) this.id = userData._id;
-    
-        if(doValidate){
-            const { error} = Joi.validate(userData, userValidationSchema);
-            this.validationerrors = error;
-        }
     } 
+
+    static ValidateInput(reqData){
+        const userValidationSchema = {
+            username : Joi.string().min(3).max(50).required(),
+            pwd: Joi.string().min(3).max(10).required(),
+            email: Joi.string().min(3).max(255).email().required(),
+            id: Joi.string().allow(null).optional(),
+            createdate: Joi.string().allow(null).optional()
+        };
+
+        return Joi.validate(reqData, userValidationSchema);
+    }
 
     get Id() {return this.id;}
     set Id(_id) {this.id = _id;}
@@ -36,9 +35,6 @@ class UserModel{
 
     get CreateDate() {return this.createdate;}
     set CreateDate(_createdate) {this.createdate = _createdate;}
-
-    get ValidationErrors() {return this.validationerrors;}
-    set ValidationErrors(_validationerrors) {this.validationerrors = _validationerrors;}
 }
 
 module.exports =  UserModel;

@@ -7,9 +7,12 @@ const jwt = require('jsonwebtoken');
 const constants  = require('../settings/constants');
 
 router.post('/', (req, res) => {
+    //Validate input
+    const {error} = UserModel.ValidateInput(req.body.user);
+    if(error) return res.status(400).send(error.details[0].message);
+
     //Creating business model
     const loginModel = new LoginModel(req.body.login);
-    if(loginModel.ValidationErrors) return res.status(400).send(loginModel.ValidationErrors.details[0].message);
 
     UserData.findOne({username : loginModel.UserName}).then(
         (userData) =>{
@@ -18,7 +21,7 @@ router.post('/', (req, res) => {
                     if(matches){
                         const sessionToken = jwt.sign({value : userData._id}, constants.JWT_SECRET, { expiresIn: 60*60*24 });
                         //Convert data object to business object
-                        const userResult = new UserModel(userData, false);
+                        const userResult = new UserModel(userData);
                         res.json({
                             records: userResult,
                             message: 'Success',
