@@ -14,12 +14,6 @@ class LoginModel{
 
         return Joi.validate(reqData, loginValidationSchema);
     }
-
-    get UserName() {return this.username;}
-    set UserName(_username) {this.username = _username;}
-
-    get Pwd() {return this.pwd;}
-    set Pwd(_pwd) {this.pwd = _pwd;}
 }
 
 module.exports =  LoginModel;

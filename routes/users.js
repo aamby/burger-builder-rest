@@ -1,8 +1,7 @@
-const router = require('express').Router();
-const Joi = require('joi');
-const bcrypt = require('bcryptjs');
 const User = require('../models/datamodels/User');
 const UserModel = require('../models/businessmodels/UserModel');
+const router = require('express').Router();
+const _ = require('lodash');
 
 router.post('/addnew', (req, res) => {
     //Validate input
@@ -12,12 +11,8 @@ router.post('/addnew', (req, res) => {
     //Creating business model
     const userModel = new UserModel(req.body.user);   
     
-    //Setting dataobject from business object
-    const user = new User({
-        username: userModel.UserName,
-        email: userModel.Email,
-        passhash: bcrypt.hashSync(userModel.Pwd, 10)
-    });
+    //Setting dataobject from business object by picking correct properties
+    const user = new User(_.pick(userModel, ['username', 'email', 'passhash']));
 
     user.save().then(
         (userData) => {

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const bcrpt = require('bcrypt');
 
 class UserModel{
     constructor(userData){
@@ -21,20 +22,16 @@ class UserModel{
         return Joi.validate(reqData, userValidationSchema);
     }
 
-    get Id() {return this.id;}
-    set Id(_id) {this.id = _id;}
+    get passhash() {
+        const salt = bcrpt.genSalt(10, (err,salt)=>{
+            if(salt) return salt;
+        });
+        const hashed = bcrpt.hash(this.pwd, salt, (err,hash)=>{
+            if(hash) return hash;
+        });
 
-    get UserName() {return this.username;}
-    set UserName(_username) {this.username = _username;}
-
-    get Email() {return this.email;}
-    set Email(_email) {this.email = _email;}
-
-    get Pwd() {return this.pwd;}
-    set Pwd(_pwd) {this.pwd = _pwd;}
-
-    get CreateDate() {return this.createdate;}
-    set CreateDate(_createdate) {this.createdate = _createdate;}
+        return hashed;
+    }
 }
 
 module.exports =  UserModel;

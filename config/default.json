@@ -1,7 +1,0 @@
-{
-    "mongodbURL" : {
-        "dbType" : "mongodb",
-        "dbServer" : "ds263791.mlab.com:63791",
-        "dbName" : "burger_builder"
-    }
-}

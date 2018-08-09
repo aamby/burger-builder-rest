@@ -4,22 +4,21 @@ const UserData = require('../models/datamodels/User');
 const UserModel = require('../models/businessmodels/UserModel');
 const LoginModel = require('../models/businessmodels/LoginModel');
 const jwt = require('jsonwebtoken'); 
-const constants  = require('../settings/constants');
 
 router.post('/', (req, res) => {
     //Validate input
-    const {error} = UserModel.ValidateInput(req.body.user);
+    const {error} = LoginModel.ValidateInput(req.body.login);
     if(error) return res.status(400).send(error.details[0].message);
 
     //Creating business model
     const loginModel = new LoginModel(req.body.login);
 
-    UserData.findOne({username : loginModel.UserName}).then(
+    UserData.findOne({username : loginModel.username}).then(
         (userData) =>{
             if(userData){
-                bcrypt.compare(loginModel.Pwd, userData.passhash, (err, matches) => {
+                bcrypt.compare(loginModel.pwd, userData.passhash, (err, matches) => {
                     if(matches){
-                        const sessionToken = jwt.sign({value : userData._id}, constants.JWT_SECRET, { expiresIn: 60*60*24 });
+                        const sessionToken = jwt.sign({value : userData._id}, config.get('envConfig.jwtsec'), { expiresIn: 60*60*24 });
                         //Convert data object to business object
                         const userResult = new UserModel(userData);
                         res.json({

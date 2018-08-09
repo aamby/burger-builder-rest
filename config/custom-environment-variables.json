@@ -3,6 +3,8 @@
         "envPort" : "PORT",
         "envMode" : "NODE_ENV",
         "dbUserName" : "bb_dbUserName", 
-        "dbPwd" : "bb_dbPwd"
+        "dbPwd" : "bb_dbPwd",
+        "debug" : "DEBUG",
+        "jwtsec": "JWTSEC"
     }
 }

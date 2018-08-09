@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Joi = require('joi');
+const _ = require('lodash');
 const IngredientControl = require('../models/datamodels/IngredientControl');
 const IngredientControlModel = require('../models/businessmodels/IngredientControlModel');
 
@@ -23,19 +23,14 @@ router.post('/getall', (req, res) => {
 
 router.post('/addnew', (req, res) => {
     //Validate input
-    const {error} = UserModel.ValidateInput(req.body.user);
+    const {error} = IngredientControlModel.ValidateInput(req.body.ingredientControl);
     if(error) return res.status(400).send(error.details[0].message);
 
     //Creating business model
-    const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
+    const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl, req.user);
     
     //Setting dataobject from business object
-    const ingredientControl = new IngredientControl({
-        label: ingredientControlModel.Label,
-        type: ingredientControlModel.Type,
-        rate: ingredientControlModel.Rate,
-        createdby: req.user
-    });
+    const ingredientControl = new IngredientControl(_.pick(ingredientControlModel, ['label', 'type', 'rate', 'createdby']));
 
     ingredientControl.save().then(
         (ingredientData) => {
@@ -55,18 +50,18 @@ router.post('/addnew', (req, res) => {
 
 router.post('/edit', (req, res) => {
     //Validate input
-    const {error} = UserModel.ValidateInput(req.body.user);
+    const {error} = IngredientControlModel.ValidateInput(req.body.user);
     if(error) return res.status(400).send(error.details[0].message);
 
     //Creating business model
     const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
   
     //Setting dataobject from business object after finding existing item
-    IngredientControl.findOne({_id:req.body.ingredientControl.id}).then(
+    IngredientControl.findOne({_id:ingredientControlModel.id}).then(
         (ingredient) =>{ 
-            ingredient.label = ingredientControlModel.Label;
-            ingredient.type = ingredientControlModel.Type;
-            ingredient.rate = ingredientControlModel.Rate;
+            ingredient.label = ingredientControlModel.label;
+            ingredient.type = ingredientControlModel.type;
+            ingredient.rate = ingredientControlModel.rate;
 
             ingredient.save().then(
                 (ingredientData) => {
