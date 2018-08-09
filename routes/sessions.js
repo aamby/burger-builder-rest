@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const config = require('config');
 const UserData = require('../models/datamodels/User');
 const UserModel = require('../models/businessmodels/UserModel');
 const LoginModel = require('../models/businessmodels/LoginModel');
@@ -18,14 +19,15 @@ router.post('/', (req, res) => {
             if(userData){
                 bcrypt.compare(loginModel.pwd, userData.passhash, (err, matches) => {
                     if(matches){
-                        const sessionToken = jwt.sign({value : userData._id}, config.get('envConfig.jwtsec'), { expiresIn: 60*60*24 });
                         //Convert data object to business object
                         const userResult = new UserModel(userData);
-                        res.json({
+                        const secret = config.get('envConfig.jwtsec');
+                        const sessionToken = jwt.sign({value:userResult}, secret, { expiresIn: 60*60*24 });
+                                 
+                        res.header('Authorization', sessionToken).json({
                             records: userResult,
                             message: 'Success',
-                            isSuccess: true,
-                            sessionToken: sessionToken
+                            isSuccess: true
                         });
                     }
                     else{
