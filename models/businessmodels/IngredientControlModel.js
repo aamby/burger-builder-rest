@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const ingredientValidationSchema = {
-    label: Joi.string().min(3).required(),
-    type: Joi.string().min(3).required(),
+    label: Joi.string().min(3).max(50).required(),
+    type: Joi.string().min(3).max(50).required(),
     rate: Joi.number().greater(0).required(),
     id: Joi.string().allow(null).optional(),
     createdby: Joi.string().allow(null).optional(),

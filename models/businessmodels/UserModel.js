@@ -1,9 +1,9 @@
 const Joi = require('joi');
 
 const userValidationSchema = {
-    username : Joi.string().min(3).required(),
-    pwd: Joi.string().min(3).required(),
-    email: Joi.string().email().required(),
+    username : Joi.string().min(3).max(50).required(),
+    pwd: Joi.string().min(3).max(10).required(),
+    email: Joi.string().min(3).max(255).email().required(),
     id: Joi.string().allow(null).optional(),
     createdate: Joi.string().allow(null).optional()
 };

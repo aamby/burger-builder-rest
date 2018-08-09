@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const loginValidationSchema = {
-    username : Joi.string().min(3).required(),
-    pwd: Joi.string().min(3).required()
+    username : Joi.string().min(3).max(50).required(),
+    pwd: Joi.string().min(3).max(10).required()
 };
 
 class LoginModel{
