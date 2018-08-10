@@ -1,5 +1,6 @@
 const morgan = require('morgan');
 const helmet = require('helmet');
+const compression = require('compression');
 const express = require('express');
 const config = require('config');
 const bodyParser = require('body-parser');
@@ -28,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Third party middleware
 app.use(helmet());
+app.use(compression());
 app.use(morgan('tiny'));
 
 //Routing
