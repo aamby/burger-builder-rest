@@ -7,7 +7,7 @@ class IngredientControlModel{
         this.rate = ingCtrlData.rate;
         if(ingCtrlData.createdby) this.createdby = ingCtrlData.createdby; 
         else if(reqUser) this.createdby = reqUser;
-        if(ingCtrlData.createdon) this.createdate = ingCtrlData.createdon;
+        if(ingCtrlData.createdate) this.createdate = ingCtrlData.createdate;
         if(ingCtrlData._id) this.id = ingCtrlData._id;
     }
 

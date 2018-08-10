@@ -17,7 +17,16 @@ router.post('/', (req, res) => {
     UserData.findOne({username : loginModel.username}).then(
         (userData) =>{
             if(userData){
+                console.log(userData);
                 bcrypt.compare(loginModel.pwd, userData.passhash, (err, matches) => {
+                    // if(err){
+                    //     res.json({
+                    //         records: null,
+                    //         message: 'Failed to authenticate password!',
+                    //         isSuccess: false,
+                    //         sessionToken: null
+                    //     });
+                    // }
                     if(matches){
                         //Convert data object to business object
                         const userResult = new UserModel(userData);
@@ -50,7 +59,7 @@ router.post('/', (req, res) => {
             }
         },
         (err) => {
-            res.send(401, 'Authentication failed! Error -' + err.message);
+            res.status(401).send('Authentication failed! Error -' + err.message);
     });
 });
 

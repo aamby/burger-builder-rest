@@ -9,7 +9,6 @@ const userRouter  = require('./routes/users');
 const sessionRouter  = require('./routes/sessions');
 const ingredientRouter  = require('./routes/ingredientControls');
 const mwHeader  = require('./middleware/header');
-const mwValidateSeeion  = require('./middleware/validateSession');
 
 const app = express();
 const port = config.get('envConfig.envPort');
@@ -27,10 +26,6 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Custom middleware
-app.use(mwHeader);
-app.use(mwValidateSeeion);
-
 //Third party middleware
 app.use(helmet());
 app.use(morgan('tiny'));
@@ -40,6 +35,9 @@ app.use('/', homeRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', sessionRouter);
 app.use('/api/ingredientcontrols', ingredientRouter);
+
+//Custom middleware
+app.use(mwHeader);
 
 //============================
 

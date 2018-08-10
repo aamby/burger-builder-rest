@@ -12,7 +12,8 @@ router.post('/addnew', (req, res) => {
     const userModel = new UserModel(req.body.user);   
     
     //Setting dataobject from business object by picking correct properties
-    const user = new User(_.pick(userModel, ['username', 'email', 'passhash']));
+    const user = new User(_.pick(userModel, ['username', 'email', 'isadmin']));
+    user.passhash = userModel.getPassHash();
 
     user.save().then(
         (userData) => {

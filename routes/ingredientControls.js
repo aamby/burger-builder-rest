@@ -2,8 +2,10 @@ const router = require('express').Router();
 const _ = require('lodash');
 const IngredientControl = require('../models/datamodels/IngredientControl');
 const IngredientControlModel = require('../models/businessmodels/IngredientControlModel');
+const validateSession  = require('../middleware/validateSession');
+const validateAdminRights  = require('../middleware/validateAdminRights');
 
-router.post('/getall', (req, res) => {
+router.post('/getall', validateSession, (req, res) => {
     IngredientControl.find({createdby:req.user}).then(
         (ingredientsData) => {
             //Creating business object collection
@@ -21,7 +23,7 @@ router.post('/getall', (req, res) => {
     );
 });
 
-router.post('/addnew', (req, res) => {
+router.post('/addnew', validateSession, (req, res) => {
     //Validate input
     const {error} = IngredientControlModel.ValidateInput(req.body.ingredientControl);
     if(error) return res.status(400).send(error.details[0].message);
@@ -48,7 +50,7 @@ router.post('/addnew', (req, res) => {
     );
 });
 
-router.post('/edit', (req, res) => {
+router.post('/edit', validateSession, (req, res) => {
     //Validate input
     const {error} = IngredientControlModel.ValidateInput(req.body.user);
     if(error) return res.status(400).send(error.details[0].message);
@@ -84,24 +86,27 @@ router.post('/edit', (req, res) => {
     );
 });
 
-router.post('/delete', (req, res) => {
-    IngredientControl.findOne({_id:req.body.ingredientControl.id}).then(
-        (ingredientData) =>{ 
-            ingredientData.remove().then(
-                () => {
-                    res.json({
-                        records: {},
-                        message: 'Success',
-                        isSuccess: true,
-                    });
-                },
-                (err) =>{
-                    res.send(500, err.message);
-                }
-            );
+router.post('/delete', [validateSession, validateAdminRights], (req, res) => {
+    IngredientControl.findByIdAndRemove({_id:req.body.ingredientControl.id}).then(
+        (foundAndDeleted) => {
+            if(!foundAndDeleted){
+                res.json({
+                    records: {},
+                    message: 'Failed',
+                    isSuccess: false,
+                });
+            }
+            else{
+                res.json({
+                    records: {},
+                    message: 'Success',
+                    isSuccess: true,
+                });
+            }
+            
         },
         (err) =>{
-            res.send(500, 'Invalid record to delete.');
+            res.send(500, 'Failed to delete.');
         }
     );
 });

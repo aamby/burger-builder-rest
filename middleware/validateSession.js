@@ -4,11 +4,13 @@ var User = require('../models/datamodels/User');
 
 module.exports = (req, res, next) => {
     const sessionToken = req.headers.authorization; 
+    if(!sessionToken) res.send(400, 'Authorization failed! No valid token is found!'); 
+
     if(!req.body.user && sessionToken){
         //jwt check
         jwt.verify(sessionToken, config.get('envConfig.jwtsec'), (err, payload) =>{
             if(err){
-                res.send(500, 'Authorization failed! Error -' + err.message);
+                res.send(400, 'Authorization failed! Error -' + err.message);
             }
 
             if(payload){
