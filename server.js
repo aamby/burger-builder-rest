@@ -1,3 +1,4 @@
+const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -31,6 +32,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(compression());
 app.use(morgan('tiny'));
+app.use(cors({
+    origin: '*',
+    credentials: true,
+    exposedHeaders: 'Authorization',
+}));
 
 //Routing
 app.use('/', homeRouter);
