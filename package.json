@@ -10,7 +10,7 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": "6.9.2"
+    "node": "10.8.0"
   },
   "author": "Ambarish Roy",
   "license": "ISC",

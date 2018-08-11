@@ -13,54 +13,31 @@ router.post('/', (req, res) => {
 
     //Creating business model
     const loginModel = new LoginModel(req.body.login);
-
-    UserData.findOne({username : loginModel.username}).then(
-        (userData) =>{
-            if(userData){
-                console.log(userData);
-                bcrypt.compare(loginModel.pwd, userData.passhash, (err, matches) => {
-                    // if(err){
-                    //     res.json({
-                    //         records: null,
-                    //         message: 'Failed to authenticate password!',
-                    //         isSuccess: false,
-                    //         sessionToken: null
-                    //     });
-                    // }
-                    if(matches){
-                        //Convert data object to business object
-                        const userResult = new UserModel(userData);
-                        const secret = config.get('envConfig.jwtsec');
-                        const sessionToken = jwt.sign({value:userResult}, secret, { expiresIn: 60*60*24 });
-                                 
-                        res.header('Authorization', sessionToken).json({
-                            records: userResult,
-                            message: 'Success',
-                            isSuccess: true
-                        });
-                    }
-                    else{
-                        res.json({
-                            records: null,
-                            message: 'Failed to authenticate password!',
-                            isSuccess: false,
-                            sessionToken: null
-                        });
-                    }
+    (async ()=>{
+        try{
+            const userData = await UserData.findOne({username : loginModel.username});
+            const matches = await bcrypt.compare(loginModel.pwd, userData.passhash);
+            if(matches){
+                //Convert data object to business object
+                const userResult = new UserModel(userData);
+                const secret = config.get('envConfig.jwtsec');
+                const sessionToken = jwt.sign({value:userResult}, secret, { expiresIn: 60*60*24 });
+                res.header('Authorization', sessionToken)
+                .json({
+                    records: userResult,
+                    message: 'Success',
+                    isSuccess: true
                 });
             }
             else{
-                res.json({
-                    records: null,
-                    message: 'Failed to authenticate user name!',
-                    isSuccess: false,
-                    sessionToken: null
-                });
+                res.status(403).send('Authorization failed! Invalid Token.');
             }
-        },
-        (err) => {
-            res.status(401).send('Authentication failed! Error -' + err.message);
-    });
+        }
+        catch(err){
+            res.status(403).send(`Authorization failed! Invalid Token. Error: ${err.message}`);
+        }
+    })();
+
 });
 
 module.exports = router;
