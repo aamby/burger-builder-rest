@@ -47,14 +47,15 @@ router.post('/edit', validateSession, (req, res) => {
     const ingredientControlModel = new IngredientControlModel(req.body.ingredientControl);
     (async ()=>{
         try{
-            const ingredientData = await IngredientControl.findOne({id:ingredientControlModel.id});
-            if(ingredientData){
-                ingredientData.label = ingredientControlModel.label;
-                ingredientData.type = ingredientControlModel.type;
-                ingredientData.rate = ingredientControlModel.rate;
-
-                const editedData = await ingredientData.save();
-                res.json({records: new IngredientControlModel(editedData),message: 'Success',isSuccess: true});
+            const updatedData = await IngredientControl.findOneAndUpdate({id:ingredientControlModel.id},{
+            $set:{
+                label: ingredientControlModel.label,
+                type: ingredientControlModel.type,
+                rate: ingredientControlModel.rate
+            }}, {new: true});
+            
+            if(updatedData){
+                res.json({records: new IngredientControlModel(updatedData),message: 'Success',isSuccess: true});
             }
             else{
                 res.status(500).send('Failed to find record!');
