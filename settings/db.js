@@ -7,12 +7,6 @@ const dbUserName = config.get('envConfig.dbUserName');
 const dbPwd = config.get('envConfig.dbPwd');
 let mongodbURL=`${config.get('mongodbURL.dbType')}://${dbUserName}:${dbPwd}@${config.get('mongodbURL.dbServer')}/${config.get('mongodbURL.dbName')}`;
 
-//Using callback
-// db.connect(mongodbURL, { useNewUrlParser: true }, (err) =>{
-//     assert.equal(null, err);
-//     debug(`Successfully connected mongo db instance with the url - ${mongodbURL}`);
-// });
-
 //Using promise
 db.connect(mongodbURL, { useNewUrlParser: true })
 .then(() => debug(`Successfully connected mongo db instance with the url - ${mongodbURL}`))

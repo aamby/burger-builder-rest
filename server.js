@@ -6,11 +6,7 @@ const express = require('express');
 const config = require('config');
 const bodyParser = require('body-parser');
 const debug = require('debug')('app:startup');
-const homeRouter  = require('./routes/home');
-const userRouter  = require('./routes/users');
-const sessionRouter  = require('./routes/sessions');
-const ingredientRouter  = require('./routes/ingredientControls');
-const mwHeader  = require('./middleware/header');
+const routes = require('./routes');
 
 const app = express();
 const port = config.get('envConfig.envPort');
@@ -39,13 +35,7 @@ app.use(cors({
 }));
 
 //Routing
-app.use('/', homeRouter);
-app.use('/api/users', userRouter);
-app.use('/api/login', sessionRouter);
-app.use('/api/ingredientcontrols', ingredientRouter);
-
-//Custom middleware
-app.use(mwHeader);
+routes(app);
 
 //============================
 
