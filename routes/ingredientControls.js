@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const _ = require('lodash');
-const mongoose = require('mongoose');
 const IngredientControl = require('../models/datamodels/IngredientControl');
 const IngredientControlModel = require('../models/businessmodels/IngredientControlModel');
 const validateSession  = require('../middleware/validateSession');
@@ -40,7 +39,7 @@ router.post('/addnew', validateSession, (req, res) => {
 
 router.post('/edit', validateSession, (req, res) => {
     //Validate input
-    const {error} = IngredientControlModel.ValidateInput(req.body.user);
+    const {error} = IngredientControlModel.ValidateInput(req.body.ingredientControl);
     if(error) return res.status(400).send(error.details[0].message);
 
     //Creating business model
