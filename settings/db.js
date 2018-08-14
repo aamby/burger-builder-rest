@@ -20,7 +20,7 @@ module.exports = db;
 // export bb_dbPwd="test1234"
 // export PORT=4545
 // export DEBUG= 
-// export JWTSEC= 'this is a secret'
+// export JWTSEC='this is a secret'
 
 //DEV-
 // export NODE_ENV="development"
@@ -28,4 +28,4 @@ module.exports = db;
 // export bb_dbPwd="test"
 // export PORT=4343
 // export DEBUG=app:* or app:startup, app:db
-// export JWTSEC= 'this is a secret'
+// export JWTSEC='this is a secret'

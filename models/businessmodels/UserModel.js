@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const bcrpt = require('bcrypt');
+const bcrpt = require('bcryptjs');
 
 class UserModel{
     constructor(userData){
