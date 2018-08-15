@@ -35,7 +35,7 @@ app.use(cors({
 }));
 
 //Routing
-routes(app);
+routes.defineRoutings(app);
 
 //============================
 

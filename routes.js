@@ -5,7 +5,9 @@ const sessionRouter  = require('./routes/sessions');
 const ingredientRouter  = require('./routes/ingredientControls');
 const testRouter  = require('./routes/tests');
 
-const routes = (app) =>{
+const routes = {};
+
+routes.defineRoutings = (app) =>{
     app.use('/', homeRouter);
     app.use('/api/users', userRouter);
     app.use('/api/login', sessionRouter);
